@@ -1,12 +1,3 @@
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'io.harness:gradle-cache:0.0.2'
-    }
-}
-
 pluginManagement {
     includeBuild("repo/gradle-settings-conventions")
     includeBuild("repo/gradle-build-conventions")
@@ -23,6 +14,15 @@ pluginManagement {
 
     plugins {
         id "de.undercouch.download" version "5.1.0"
+    }
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'io.harness:gradle-cache:0.0.2'
     }
 }
 
