@@ -49,6 +49,15 @@ dependencyResolutionManagement {
 
 def buildProperties = BuildPropertiesKt.getKotlinBuildPropertiesForSettings(settings)
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'io.harness:gradle-cache:0.0.2'
+    }
+}
+
 // modules
 include ":benchmarks",
         ":compiler",
@@ -951,4 +960,20 @@ if (buildProperties.isKotlinNativeEnabled) {
     include ':native:kotlin-test-native-xctest'
     include ':native:cli-native'
     include ':native:native.tests:cli-tests'
+}
+
+apply plugin: 'io.harness.gradle-cache'
+
+buildCache {
+    local {
+        // Local build cache is dangerous as it might produce inconsistent results
+        // in case developer modifies files while the build is running
+        enabled = false
+    }
+    remote(io.harness.Cache) {
+        accountId = System.getenv('HARNESS_ACCOUNT_ID')
+        token = System.getenv('HARNESS_PAT')
+        push = System.getenv('CI') == "true"
+        endpoint = System.getenv('HARNESS_CACHE_SERVICE_ENDPOINT')
+    }
 }
