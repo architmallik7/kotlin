@@ -1,3 +1,12 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'io.harness:gradle-cache:0.0.2'
+    }
+}
+
 pluginManagement {
     includeBuild("repo/gradle-settings-conventions")
     includeBuild("repo/gradle-build-conventions")
@@ -48,15 +57,6 @@ dependencyResolutionManagement {
 }
 
 def buildProperties = BuildPropertiesKt.getKotlinBuildPropertiesForSettings(settings)
-
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath 'io.harness:gradle-cache:0.0.2'
-    }
-}
 
 // modules
 include ":benchmarks",
