@@ -962,18 +962,22 @@ if (buildProperties.isKotlinNativeEnabled) {
     include ':native:native.tests:cli-tests'
 }
 
-apply plugin: 'io.harness.gradle-cache'
+apply(plugin = "io.harness.gradle-cache")
 
 buildCache {
     local {
-        // Local build cache is dangerous as it might produce inconsistent results
-        // in case developer modifies files while the build is running
-        enabled = false
+        isEnabled = !isCiBuild
     }
-    remote(io.harness.Cache) {
-        accountId = System.getenv('HARNESS_ACCOUNT_ID')
-        token = System.getenv('HARNESS_PAT')
-        push = System.getenv('CI') == "true"
-        endpoint = System.getenv('HARNESS_CACHE_SERVICE_ENDPOINT')
+    remote<develocity.buildCache> {
+        server = "https://ge.detekt.dev"
+        isEnabled = true
+        val accessKey = System.getenv("DEVELOCITY_ACCESS_KEY")
+        isPush = isCiBuild && !accessKey.isNullOrEmpty()
+    }
+    remote<io.harness.Cache> {
+        accountId = System.getenv("HARNESS_ACCOUNT_ID")
+        token = System.getenv("HARNESS_PAT")
+        push = System.getenv("CI") == "true"
+        endpoint = System.getenv("HARNESS_CACHE_SERVICE_ENDPOINT")
     }
 }
